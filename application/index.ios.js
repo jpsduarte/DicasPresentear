@@ -12,12 +12,24 @@ import {
   View
 } from 'react-native';
 
+var Login = require('./login');
+var Header = require('./header');
 var TabBarExample = require('./tab.bar.ios');
 
 class application extends Component {
   render() {
     return (
-      <TabBarExample />
+
+      <View style={styles.container}>
+
+        <Login />
+
+        <Header />
+        <TabBarExample />
+      </ View>
+
+
+
     );
   }
 }
@@ -25,8 +37,7 @@ class application extends Component {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    justifyContent: 'center',
-    alignItems: 'center',
+
     backgroundColor: '#F5FCFF',
   },
   welcome: {
