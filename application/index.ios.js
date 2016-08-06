@@ -22,7 +22,7 @@ class application extends Component {
 
       <View style={styles.container}>
 
-        <Login />
+
 
         <Header />
         <TabBarExample />
