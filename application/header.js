@@ -12,7 +12,7 @@ var {
 class Header extends Component {
   render() {
     return (
-      <View style={{flexDirection: 'row', height: 60, padding: 20, backgroundColor: '#FF6B6B'}}>
+      <View style={styles.header}>
         <Image source={require('./logo.png')} style={{width: 24, height: 24, marginRight: 5}} />
         <Text style={styles.title}>Dicas Presentear</Text>
       </View>
@@ -21,19 +21,19 @@ class Header extends Component {
 }
 
 var styles = StyleSheet.create({
+
+  header: {
+    flexDirection: 'row',
+    height: 60,
+    padding: 20,
+    backgroundColor: '#FF6B6B'
+  },
+
   title: {
-    fontSize: 20,
+    fontSize: 18,
     fontWeight: 'bold',
     color: 'white'
-  },
-  tabContent: {
-    flex: 1,
-    alignItems: 'center',
-  },
-  tabText: {
-    color: 'white',
-    margin: 50,
-  },
+  }
 });
 
 module.exports = Header;

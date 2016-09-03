@@ -12,18 +12,10 @@ var {
   TouchableOpacity,
   Picker,
   Linking,
-  RefreshControl,
-  ActivityIndicator 
+  RefreshControl
 } = ReactNative;
 
 const Item = Picker.Item;
-
-var filter = require('./filter');
-var DismissKeyboard = require('dismissKeyboard');
-
-var currentPage = 1;
-var totalResults = [];
-var productByName = {};
 
 class Search extends Component {
 
@@ -49,102 +41,19 @@ class Search extends Component {
     };
   }
 
-
-  getRecommendationsAsync(onSuccess) {
-
-      //var url = 'http://api.dicaspresentear.com.br/api/v1/Produto/Listar?Auditado=true&Idade=&Tag=&Valor=&TotalRegistros=30&Pagina=' + currentPage + '&Genero=';
-      var url = 'http://api.dicaspresentear.com.br/api/v1/Produto/Listar?Auditado=true&Idade=' + this.state.age + '&Tag=&Valor=' + this.state.price +'&TotalRegistros=30&Pagina=' + currentPage + '&Genero=' + this.state.gender;
-
-      return fetch(url)
-           .then((response) => response.json())
-           .then((responseJson) => {
-             onSuccess(responseJson.Data)
-             //return responseJson.Data;
-           })
-           .catch((error) => {
-             console.error(error);
-           });
-
-    }
-
-    fetchResults() {
-      console.log('fetch');
-
-      var self = this;
-
-      this.getRecommendationsAsync(function(data) {
-
-        console.log(data);
-
-        for (var key in data) {
-          totalResults.push(data[key]);
-        }
-
-        console.log(totalResults.length);
-
-        self.setState({
-          dataSource: self.state.dataSource.cloneWithRows(totalResults),
-          loaded: true,
-          loading: false,
-          refreshing: false
-        });
-
-        if(totalResults.length == 0) {
-          self.setState({
-            loaded: false
-          });
-
-          Alert.alert('Presentes não encontrados', 'Não foi localizado nenhum resultado para o filtro selecionado. Por favor, mude os filtros e tente novamente.');
-
-        }
-
-        currentPage++;
-
-      });
-
-
-    }
-
-handleSeach() {
-  DismissKeyboard();
-
-  totalResults = [];
-
-  this.setState({
-    loading: true,
-    dataSource: this.state.dataSource.cloneWithRows(totalResults)
-  });
-
-  this.fetchResults();
-}
-
-
-
   render() {
     return (
-      <View style={{flexDirection: 'column'}}>
+      <View style={{flexDirection: 'column', flex: 1, padding: 20, backgroundColor: '#4196cc'}}>
 
         {!this.state.loaded ? this.renderFilter() : null }
-
-        {this.state.loading ? this.renderLoadingView() : null }
 
       </View>
     );
   }
 
-  renderLoadingView() {
-  return (
-    <ActivityIndicator elevation={10}
-     animating={this.state.loading}
-     style={[styles.centering, {height: 80}]}
-     size="large"
-   />
-  );
-}
-
   renderFilter() {
 	  return (
-		  <View style={{ flexDirection: 'column', height: 210, padding: 5, backgroundColor: '#4196cc' }}>
+		  <View style={styles.filter} duration={500}>
 				<Picker style={styles.gender}
 				  selectedValue={this.state.gender}
 				  onValueChange={(gender) => this.setState({gender: gender})}>
@@ -195,8 +104,8 @@ handleSeach() {
 				  <Item label="Outro" value="0" />
 				</Picker>
 
-				<TouchableOpacity  style={{flex: 1, alignItems: 'center', alignSelf: 'stretch', marginTop:10, backgroundColor: '#FF6B6B' }}
-				onPress={() => this.handleSeach()}>
+				<TouchableOpacity  style={{flex: 1, alignItems: 'center'}}
+				onPress={() => this._handleSeach()}>
 					<Text style={styles.search}>Buscar Recomendação</Text>
 				</TouchableOpacity >
 
@@ -206,37 +115,18 @@ handleSeach() {
 }
 
 var styles = StyleSheet.create({
-  price: {
-  height:40,
-  backgroundColor: 'white',
-  marginTop:10
-},
-gender: {
-  height:40,
-  backgroundColor: 'white',
-  marginTop:0
-},
-age: {
-  height:40,
-  backgroundColor: 'white',
-  marginTop:10
-},
+  filter: {
+    flex: 1,
+    flexDirection: 'column'
+  },
   search: {
-    color:  'white',
+    color: 'white',
     fontWeight: 'bold',
     fontSize: 16,
-    paddingTop: 20,
-    marginTop:12,
-    alignSelf: 'center'
+    marginTop:10,
+    marginBottom: 0
+  }
 
-  },
-
-  centering: {
-  alignItems: 'center',
-  justifyContent: 'center',
-  padding: 8,
-  zIndex: 10
-}
 
 });
 
